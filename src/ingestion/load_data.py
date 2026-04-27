@@ -1,4 +1,10 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from src.embeddings.embedder import create_embedding_model
+from src.vectorstore.vectordb import create_vector_store
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def load_text(file_path):
@@ -29,9 +35,17 @@ if __name__ =="__main__":
     
     print(f"Total chunks :{len(chunks)}\n")
     
-    for i, chunk in enumerate(chunks):
-        print(f"Chunk{i+1}:")
-        print(chunk)
+    embeddings_model=create_embedding_model()
+    
+    vector_store=create_vector_store(chunks,embeddings_model)
+    
+    print("vector db created successfully")
+    
+    # print(f"Embeddings generated :{len(embeddings)}")
+    
+    # for i, chunk in enumerate(chunks):
+    #     print(f"Chunk{i+1}:")
+    #     print(chunk)
     
 
     

@@ -9,9 +9,3 @@ def create_embedding_model():
     return embedding_model
 
 
-def generate_embedding(chunks):
-    embedding_model=create_embedding_model()
-    
-    embeddings=embedding_model.embed_documents(chunks)
-    
-    return embeddings
