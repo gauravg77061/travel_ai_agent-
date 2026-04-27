@@ -1,6 +1,7 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from src.embeddings.embedder import create_embedding_model
 from src.vectorstore.vectordb import create_vector_store
+from src.rag.rag_pipeline import retrive_docs
 
 from dotenv import load_dotenv
 
@@ -40,6 +41,18 @@ if __name__ =="__main__":
     vector_store=create_vector_store(chunks,embeddings_model)
     
     print("vector db created successfully")
+    
+    #sample query for testing whether we are able to retrive data from the vector db or not :
+    
+    query="Tell me about the Goa"
+    
+    results=retrive_docs(vector_store,query)
+    
+    print("Retrived Resuts:\n")
+    
+    for doc in results:
+        print(doc.page_content)
+        print("-"*40)
     
     # print(f"Embeddings generated :{len(embeddings)}")
     
