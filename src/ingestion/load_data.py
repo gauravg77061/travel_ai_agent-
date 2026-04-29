@@ -27,30 +27,47 @@ def split_textIntoChunks(text):
     
     #return chunking 
     return chunks
-    
-if __name__ =="__main__":
+
+def initialize_vector_store():
     data=load_text("data/travel_data.txt")
-    # print(data)
     
     chunks=split_textIntoChunks(data)
-    
-    # print(f"Total chunks :{len(chunks)}\n")
     
     embeddings_model=create_embedding_model()
     
     vector_store=create_vector_store(chunks,embeddings_model)
     
-    print("vector db created successfully")
+    print("Vector db created successfully")
     
-    while True:
-        query =input("Ask (type exit):")
+    return vector_store
+
+# This is for cli
+    
+# if __name__ =="__main__":
+    
+    print("")
+    # data=load_text("data/travel_data.txt")
+    # # print(data)
+    
+    # chunks=split_textIntoChunks(data)
+    
+    # # print(f"Total chunks :{len(chunks)}\n")
+    
+    # embeddings_model=create_embedding_model()
+    
+    # vector_store=create_vector_store(chunks,embeddings_model)
+    
+    # print("vector db created successfully")
+    
+    # while True:
+    #     query =input("Ask (type exit):")
         
-        if query.lower() == "exit":
-            break
-        answer=run_rag(vector_store,query)
+    #     if query.lower() == "exit":
+    #         break
+    #     answer=run_rag(vector_store,query)
         
-        print("\nResults",answer)
-        print("-"*50)
+    #     print("\nResults",answer)
+    #     print("-"*50)
     
     #sample query for testing whether we are able to retrive data from the vector db or not :
     

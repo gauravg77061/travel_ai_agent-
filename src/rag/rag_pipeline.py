@@ -8,7 +8,7 @@ def run_rag(vector_store,query):
     for doc in result:
         context+=doc.page_content + "\n\n"
         
-    answer=get_answer(query,context)
+    answer=get_answer(context,query)
     
     return answer
 
