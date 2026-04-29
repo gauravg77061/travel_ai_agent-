@@ -1,4 +1,15 @@
+from src.llm.llm_client import get_answer
 
-def retrive_docs(vector_store,query):
+def run_rag(vector_store,query):
     result=vector_store.similarity_search(query,k=2)
-    return result
+    
+    context=""
+    
+    for doc in result:
+        context+=doc.page_content + "\n\n"
+        
+    answer=get_answer(query,context)
+    
+    return answer
+
+    

@@ -1,7 +1,7 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from src.embeddings.embedder import create_embedding_model
 from src.vectorstore.vectordb import create_vector_store
-from src.rag.rag_pipeline import retrive_docs
+from src.rag.rag_pipeline import run_rag
 
 from dotenv import load_dotenv
 
@@ -30,11 +30,11 @@ def split_textIntoChunks(text):
     
 if __name__ =="__main__":
     data=load_text("data/travel_data.txt")
-    print(data)
+    # print(data)
     
     chunks=split_textIntoChunks(data)
     
-    print(f"Total chunks :{len(chunks)}\n")
+    # print(f"Total chunks :{len(chunks)}\n")
     
     embeddings_model=create_embedding_model()
     
@@ -42,17 +42,27 @@ if __name__ =="__main__":
     
     print("vector db created successfully")
     
+    while True:
+        query =input("Ask (type exit):")
+        
+        if query.lower() == "exit":
+            break
+        answer=run_rag(vector_store,query)
+        
+        print("\nResults",answer)
+        print("-"*50)
+    
     #sample query for testing whether we are able to retrive data from the vector db or not :
     
-    query="Tell me about the Goa"
+    # query="Tell me about the Goa"
     
-    results=retrive_docs(vector_store,query)
+    # results=retrive_docs(vector_store,query)
     
-    print("Retrived Resuts:\n")
+    # print("Retrived Resuts:\n")
     
-    for doc in results:
-        print(doc.page_content)
-        print("-"*40)
+    # for doc in results:
+    #     print(doc.page_content)
+    #     print("-"*40)
     
     # print(f"Embeddings generated :{len(embeddings)}")
     
