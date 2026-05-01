@@ -10,16 +10,16 @@ const User=require('../models/User')
 
 //signup
 
-authRouter.post('signup',async(req,res)=>{
+authRouter.post('/signup',async(req,res)=>{
 
   try {
 
-    const{firstName,LastName,email,password}=req.body;
+    const{firstName,lastName,email,password}=req.body;
 
     const checkForEmail=await User.findOne({email});
 
     if(checkForEmail){
-        throw new Error('Emal is already registered')
+        throw new Error('Email is already registered')
     }
 
     const hashPassword=await bcrypt.hash(password,10)
@@ -27,7 +27,7 @@ authRouter.post('signup',async(req,res)=>{
     const user=new User({
         firstName,
         lastName,
-        emailId,
+        email,
         password:hashPassword
     })
 
@@ -39,7 +39,12 @@ authRouter.post('signup',async(req,res)=>{
 
     res.json({
         message:'signup successfully',
-        data:savedUse,
+        data:{
+            _id:savedUser._id,
+            firstName:savedUser.firstName,
+            lastName:savedUser.lastName,
+            email:savedUser.email,
+        },
     })
     
   } catch (error) {
@@ -63,26 +68,38 @@ authRouter.post('/login',async(req,res)=>{
             
         }
 
-        const user=await User.findOne({email})
+        const savedUser=await User.findOne({email})
 
-        if(!user){
+        if(!savedUser){
             throw new Error("Invald email id")
         }
 
         //validating password 
 
-        const isPassword=await User.validatePassword(password)
+        const isPassword=await savedUser.validatePassword(password)
 
         if(isPassword){
-            const token=await user.getJwt()
+            const token=await savedUser.getJwt()
 
             res.cookie("token",token);
 
-            res.send(user);
+            res.status(200).json({
+            message:'login successfully',
+            data:{
+                _id:savedUser._id,
+                firstName:savedUser.firstName,
+                lastName:savedUser.lastName,
+                email:savedUser.email,
+            },
+    })
+        }
+        else {
+            throw new Error('Invalid credentials')
         }
 
     } catch (error) {
-        throw new Error("Error"+error.message)
+        res.status(400).send("Error"+error.messgae);
+
     }
 
 })
@@ -100,3 +117,6 @@ authRouter.post('/logout',async(req,res)=>{
         res.status(400).send("error "+ error.message);
     }
 })
+
+
+module.exports=authRouter;

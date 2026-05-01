@@ -4,12 +4,12 @@ const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 
 const UserSchema=new mongoose.Schema({
-    FirstName:{
+    firstName:{
         type:String,
         required:true,
         trim:true,
     },
-    LastName:{
+    lastName:{
         type:String,
         trim:true,
     },
