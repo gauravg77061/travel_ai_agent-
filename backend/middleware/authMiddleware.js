@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User'
+import User from '../models/User.js'
 import cookieParser from 'cookie-parser';
 
 const userAuth= async(req,res,next)=>{
@@ -12,7 +12,7 @@ const userAuth= async(req,res,next)=>{
 
         
 
-        const decodedMessage=await jwt.verif(token,process.env.JWT_SECRET);
+        const decodedMessage=await jwt.verify(token,process.env.JWT_SECRET);
 
         console.log(decodedMessage)
 
