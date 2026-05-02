@@ -54,6 +54,91 @@ groupRouter.post('/create',userAuth,async(req,res)=>{
 
 })
 
+groupRouter.post('/join',userAuth,async(req,res)=>{
+    try {
+        
+        const {inviteCode} = req.body;
+
+        if(!inviteCode){
+            throw new Error("Invite Code is required")
+
+        }
+
+        const group=await Group.findOne({inviteCode})
+
+        if(!group){
+            throw new Error("Invalid invite Code")
+        }
+
+        const userId=req.user._id;
+
+        const isMember = group.members.some(
+  (member) => member.toString() === userId.toString()
+)
+
+        if(isMember){
+            return res.status(200).json({
+                message:"Already a member",
+                data:group,
+            })
+        }
+
+        group.members.push(userId);
+
+        await group.save();
+
+        return res.status(200).json({
+            message:"Joined group successfully",
+            data :group,
+        })
+        
+
+    } catch (error) {
+        return res.status(400).json({
+            error:error.message,
+        })
+    }
+})
+
+groupRouter.get('/:id',userAuth,async(req,res)=>{
+    try {
+        
+        const groupId=req.params.id;
+
+        if(!groupId){
+            throw new Error("Group id not prsent")
+        }
+
+        const group=await Group.findById(groupId);
+
+        if(!group){
+            throw new Error("Group not found")
+        }
+
+        const userId=req.user._id;
+
+         const isMember = group.members.some(
+      (member) => member.toString() === userId.toString()
+    );
+
+        if(!isMember){
+            res.status(400).json({
+                message : "You are not the members of this group"
+            })
+        }
+
+        return res.status(200).json({
+            message:"Group fetched successfully",
+            data:group,
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            error:error.message,
+        })
+    }
+})
+
 module.exports = groupRouter;
 
 
