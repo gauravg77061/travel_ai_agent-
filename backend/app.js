@@ -3,6 +3,7 @@ const connectDB=require("./config/dataBase");
 const cookieParser = require('cookie-parser');
 const authRouter=require('./routes/auth');
 const profileRouter = require('./routes/profile');
+const groupRouter=require('./routes/groups')
 const {userAuth}=require("./middleware/authMiddleware")
 require("dotenv").config()
 
@@ -15,6 +16,9 @@ app.use(express.json())
 app.use('/auth',authRouter);
 
 app.use('/profile',profileRouter)
+
+
+app.use('/group',groupRouter);
 
 connectDB()
 .then(()=>{
