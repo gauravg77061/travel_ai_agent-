@@ -4,7 +4,8 @@ const cookieParser = require('cookie-parser');
 const authRouter=require('./routes/auth');
 const profileRouter = require('./routes/profile');
 const groupRouter=require('./routes/groups')
-const {userAuth}=require("./middleware/authMiddleware")
+const {userAuth}=require("./middleware/authMiddleware");
+const messageRouter = require('./routes/message');
 require("dotenv").config()
 
 const app=express();
@@ -19,6 +20,8 @@ app.use('/profile',profileRouter)
 
 
 app.use('/group',groupRouter);
+
+app.use('/message',messageRouter)
 
 connectDB()
 .then(()=>{
