@@ -53,4 +53,44 @@ messageRouter.post('/send',userAuth,async(req,res)=>{
     }
 })
 
+//Get route for fetching the all the group messages
+
+messageRouter.get('/:groupId',userAuth,async(req,res) =>{
+    try {
+        const groupId=req.params.groupId;
+
+        if(!groupId){
+            throw new Error("GroupId iss required")
+        }
+
+        const group=await Group.findById(groupId)
+
+        if(!group){
+            throw new Error("No group found")
+        }
+
+        const userId=req.user._id;
+
+        const isMember=group.members.some(
+            (member) => member.toString() ===userId.toString()
+        )
+
+        if(!isMember){
+            throw new Error("you are not a members of this group")
+        }
+
+        const messages=await Message.find({groupId}).sort({createdAt:1})
+
+        return res.status(200).json({
+            message:"Message fetched successfully",
+            data:messages
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            error:error.message,
+        })
+    }
+})
+
 module.exports=messageRouter;
