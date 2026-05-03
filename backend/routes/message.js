@@ -52,14 +52,30 @@ messageRouter.post('/send',userAuth,async(req,res)=>{
 
             //Fetch last 10 messages 
 
+       
+
             const recentMessages= await Message.find({groupId})
             .sort({createdAt:-1})
             .limit(10)
 
+            const filteredMessages = recentMessages
+            .reverse()
+            .filter(msg =>{
+                const text = msg.text.toLowerCase().trim();
+
+                if(text.length < 5) return false;
+
+                const noiseWords=["ok","okay","hi","hello","yes","no","lol"]
+
+                if(noiseWords.includes(text)) return false;
+
+                return true;
+
+            })
+
             // Building context
 
-            const context =recentMessages
-            .reverse()
+            const context = filteredMessages
             .map(msg => `${msg.role} :${msg.text}`)
             .join("\n")
 
