@@ -35,6 +35,8 @@ messageRouter.post('/send',userAuth,async(req,res)=>{
             throw new Error("You are not a member of this group")
         }
 
+        //saves user messages 
+
         const userMessage=await Message.create({
            groupId,
            senderId:userId,
@@ -44,12 +46,41 @@ messageRouter.post('/send',userAuth,async(req,res)=>{
 
         let aiMessages = null;
 
+        // AI Trigger
+
         if(text.toLowerCase().includes("@ai")){
+
+            //Fetch last 10 messages 
+
+            const recentMessages= await Message.find({groupId})
+            .sort({createdAt:-1})
+            .limit(10)
+
+            // Building context
+
+            const context =recentMessages
+            .reverse()
+            .map(msg => `${msg.role} :${msg.text}`)
+            .join("\n")
+
+            const systemPrompt=`
+                You are an AI travel assistant inside a group chat.
+
+                Rules:
+                - Answer like a helpful friend
+                - Keep answers short and useful
+                - Use context from previous messages
+                - Give practical travel suggestions
+                `;
+
+               const finalQuery=systemPrompt+"\n\n"+context+"\nuser:"+text; 
+
+
             const response=await axios.post(
                 "http://127.0.0.1:8000/chat",
 
             {
-                query:text
+                query:finalQuery,
             }
         );
 
