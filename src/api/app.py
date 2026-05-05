@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 from src.ingestion.load_data import initialize_vector_store
 from src.rag.rag_pipeline import run_rag
+from src.agent.handler import handle_query
 
 app=FastAPI()
 
@@ -19,5 +20,5 @@ def home():
 
 @app.post('/chat')
 def chat(req:QuerRequest):
-    answer=run_rag(vector_store,req.query)
+    answer=handle_query(vector_store,req.query)
     return {"response" : answer}

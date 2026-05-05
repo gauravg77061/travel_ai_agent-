@@ -99,7 +99,15 @@ messageRouter.post('/send',userAuth,async(req,res)=>{
             - Sound like a helpful friend, not a robot
             `;
 
-               const finalQuery=systemPrompt+"\n\n"+context+"\nuser:"+text; 
+            const finalQuery=`${systemPrompt} 
+            
+            CONVERSATION:
+            ${context}
+
+            User:${text}
+            AI:
+
+            `;
 
 
             const response=await axios.post(
