@@ -23,7 +23,18 @@ def handle_query(vector_store,query:str):
         )
     
     elif(intent == 'hotel'):
-        return get_hotels("Goa")
+        city=extract_city(query)
+        
+        if not city:
+            return "Please mention a city for hotel recommendation"
+        
+        hotel_data=get_hotels(city)
+        
+        return get_answer(
+            f"Hotel data: {hotel_data}",
+            f"Suggest hotels for this query:{query}"
+        )
+        
     else:
         return get_answer("",query)
     
