@@ -1,26 +1,29 @@
 from src.llm.llm_client import get_answer
 import json
 
+
 def extract_city(query: str):
 
     prompt = f"""
-Extract the city name from the user query.
+Extract ONLY the city/place name from the query.
 
-Return only JSON in this format:
+Return JSON only.
 
-{{"city":"city_name"}}
+Example:
+{{"city":"Delhi"}}
 
-if no city found:
-{{"city":null}}
-
-
-Query: {query}
+Query:
+{query}
 """
 
-    response = get_answer("", prompt).strip()
+    response = get_answer("", prompt)
 
     try:
-        data=json.loads(response)
+
+        data = json.loads(response)
+
         return data.get("city")
+
     except:
+
         return None
