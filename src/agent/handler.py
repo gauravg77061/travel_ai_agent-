@@ -2,7 +2,7 @@ from src.agent.controller import detect_intent
 from src.rag.rag_pipeline import run_rag
 from src.llm.llm_client import get_answer
 from  src.tools.weather_tool import get_weather
-from src.tools.hotels_tool import get_hotels
+from src.tools.place_tool import get_palce_info
 from src.utils.extract_city import extract_city
 
 def handle_query(vector_store,query:str):
@@ -22,17 +22,20 @@ def handle_query(vector_store,query:str):
             f"Explain weather for user query:{query}"
         )
     
-    elif(intent == 'hotel'):
+    
+    elif(intent == 'place_info'):
         city=extract_city(query)
         
         if not city:
             return "Please mention a city for hotel recommendation"
         
-        hotel_data=get_hotels(city)
+        place_data=get_palce_info(city)
+        
+       
         
         return get_answer(
-            f"Hotel data: {hotel_data}",
-            f"Suggest hotels for this query:{query}"
+            f"City data: {place_data}",
+            f"Explain this place in a friendly travel style:{query}"
         )
         
     else:

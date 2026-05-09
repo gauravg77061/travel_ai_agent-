@@ -8,7 +8,7 @@ def detect_intent(query:str):
     elif 'weather' in q:
         return "weather"
     
-    elif 'hotel' in q:
-        return 'hotel'
+    elif 'place' in q or "about" in q or "visit" in g:
+        return 'place_info'
     
     return 'general'
