@@ -6,9 +6,20 @@ const profileRouter = require('./routes/profile');
 const groupRouter=require('./routes/groups')
 const {userAuth}=require("./middleware/authMiddleware");
 const messageRouter = require('./routes/message');
+const http=require('http')
+const {Server}=require("socket.io")
+const registerMessageSocket=require('./sockets/messageSocket')
 require("dotenv").config()
 
+
 const app=express();
+const server=http.createServer(app);
+
+const io=new Server(server,{
+    cors:{
+        origin:"*"
+    }
+})
 
 app.use(cookieParser())
 
@@ -23,10 +34,15 @@ app.use('/group',groupRouter);
 
 app.use('/message',messageRouter)
 
+io.on("connection",(socket) => {
+    registerMessageSocket(io,socket);
+})
+
+
 connectDB()
 .then(()=>{
     console.log("Data base connected successfully")
-    app.listen(process.env.PORT,()=>{
+    server.listen(process.env.PORT,()=>{
         console.log(`server is running at port number port ${process.env.PORT}`)
     })
 })
