@@ -1,9 +1,52 @@
 import React from 'react';
 import { useState } from 'react';
+import axios from "axios"
+
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import  {setUser} from '../redux/slices/authSlice'
+import BASE_URL from '../services/axios';
 
 const AuthPage = () =>{
  {/* TripSync AI */}
     const[isLogin,setIsLogin]=useState(true);
+
+    const[firstName,setFirstName]=useState("");
+    const[lastName,setLastName]=useState("")
+    const[email,setEmail]=useState("")
+    const[password,setPassword]=useState("")
+
+    const dispatch=useDispatch();
+    const navigate=useNavigate();
+
+    const handleSubmit=async (e)=>{
+
+        try {
+            e.preventDefault();
+
+            const endpoint = isLogin ?("auth/login"):("auth/signup");
+
+            const payload=isLogin ?({
+                email,
+                password,
+            }):({
+                firstName,
+                lastName,
+                email,
+                password,
+            });
+
+            const response=await axios.post(
+                BASE_URL+endpoint,payload,{withCredentials:true}
+            );
+
+            console.log(response.data);
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return(
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -18,17 +61,23 @@ const AuthPage = () =>{
                     AI powered Travel Group Chat
                 </p>
 
-                <form className ="space-y-4" action="">
+                <form className ="space-y-4" action=""
+                onSubmit={handleSubmit}
+                >
                     
                     {!isLogin && (
                         <>
                         <input
                         type='text'
                         placeholder='First Name'
+                        value={firstName}
+                        onChange={(e) =>setFirstName(e.target.value)}
                         className='w-full p-3 rounded-lg bg-zinc-800 outline-none'
                         />
                          <input
                         type='text'
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                         placeholder='Last Name'
                         className='w-full p-3 rounded-lg bg-zinc-800 outline-none'
                         />
@@ -38,12 +87,16 @@ const AuthPage = () =>{
                      <input
                         type='email'
                         placeholder='Email'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         className='w-full p-3 rounded-lg bg-zinc-800 outline-none'
                         />
 
                          <input
                         type='password'
                         placeholder='Password'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         className='w-full p-3 rounded-lg bg-zinc-800 outline-none'
                         />
 
