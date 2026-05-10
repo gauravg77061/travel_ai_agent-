@@ -13,13 +13,15 @@ socket.on("connect", () => {
     socket.emit("send_message", {
         groupId,
         senderId: "69f5d009c38faa7fc47cbb8e",
-        text: "Hello realtime group chat",
+        text: "@ai can u plan 2 days trip of New york",
     });
 
 });
 
+// Listen for all realtime messages
 socket.on("receive_message", (message) => {
 
-    console.log("New Message:", message);
+    console.log("\n========= NEW MESSAGE =========");
+    console.log(message);
 
 });

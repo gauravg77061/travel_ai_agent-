@@ -1,6 +1,8 @@
 const Group=require('../models/group')
 const Message=require("../models/message")
 
+const{sendMessageService} =require("../services/messageService")
+
 const registerMessageSocket=(io,socket) =>{
     console.log("Socket connected",socket.id)
 
@@ -16,33 +18,26 @@ const registerMessageSocket=(io,socket) =>{
         try {
             const{groupId,senderId,text} = data;
 
-            if(!groupId || !senderId || !text){
-                throw new Error("Invald message data")
-
-            }
-
-            const group=await Group.findById(groupId);
-
-            if(!group){
-                throw new Error("Group not found")
-            }
-
-            const isMember = group.members.some(
-                (member) => member.toString() === senderId.toString()
-            );
-
-            if(!isMember){
-                throw new Error("you are not a member of this group")
-            }
-
-            const savedMessage=await Message.create({
+            const result=await sendMessageService({
                 groupId,
                 senderId,
-                role:"user",
                 text,
             })
 
-            io.to(groupId).emit("receive_message",savedMessage)
+            io.to(groupId).emit(
+                "receive_message",
+                result.userMessage
+            )
+
+            //Emit ai message if exists 
+
+            if(result.aiMessage){
+                io.to(groupId).emit(
+                    "receive_message",
+                    result.aiMessage
+                )
+            }
+            
 
         } catch (error) {
             console.log(error.message)
