@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 
-
+import { useNavigate } from "react-router-dom";
 
 import BASE_URL from "../services/axios";
 
 const Sidebar =()=>{
 
-    const[groups,setGroups]=useState([])
+    const[groups,setGroups]=useState([]);
+
+    const navigate=useNavigate();
 
     const fetchGroups = async () =>{
         try {
@@ -56,13 +58,20 @@ const Sidebar =()=>{
                 groups.map((group,key) =>(
                     <div
                     key={group?._id}
+
+                    onClick={() => navigate(`/chat/${group?._id}`)}
+
                     className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500 transition-all duration-300 p-4 rounded-2xl cursor-pointer">
 
                         <h2 className="text-lg font-semibold text-white">
                             {group?.name}
                         </h2>
 
-                            <button className="mt-3 text-sm text-cyan-400 hover:text-cyan-300 ">
+                            <button 
+                            
+                            onClick={(e) =>e.stopPropagation()}
+                            
+                            className="mt-3 text-sm text-cyan-400 hover:text-cyan-300 ">
 
               Invite Members
 
