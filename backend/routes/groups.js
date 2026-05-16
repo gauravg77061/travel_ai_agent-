@@ -100,6 +100,28 @@ groupRouter.post('/join',userAuth,async(req,res)=>{
     }
 })
 
+groupRouter.get('/all',userAuth,async(req,res) =>{
+    try {
+        
+        const userId=req.user._id;
+
+        const groups=await Group.find({
+            members: userId,
+        })
+
+
+        return res.json({
+            message:"Group fetched successfully",
+            data:groups
+        })
+
+    } catch (error) {
+        return res.status(400).json({
+            error:error.message,
+        })
+    }
+})
+
 groupRouter.get('/:id',userAuth,async(req,res)=>{
     try {
         
@@ -138,6 +160,8 @@ groupRouter.get('/:id',userAuth,async(req,res)=>{
         })
     }
 })
+
+
 
 module.exports = groupRouter;
 

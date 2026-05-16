@@ -42,6 +42,10 @@ const AuthPage = () =>{
 
             console.log(response.data);
 
+            dispatch(setUser(response.data.data));
+
+            navigate("/dashboard");
+
 
         } catch (error) {
             console.log(error)
