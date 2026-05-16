@@ -19,9 +19,9 @@ const Navbar = ({userData}) => {
         {userData?.firstName} {userData?.lastName}
       </h2>
 
-      <p className='text-sm text-gray-400'>
+      {/* <p className='text-sm text-gray-400'>
         {userData?.email}
-      </p>
+      </p> */}
 
      </div>
 
