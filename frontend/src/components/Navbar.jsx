@@ -2,30 +2,31 @@ import React from 'react'
 
 const Navbar = ({userData}) => {
 
-  console.log(userData)
+  // console.log(userData)
 
   return (
-    <div className='border-b border-zinc-800 px-10 py-5  flex items-center justify-between bg-black'>
-      
-      {/* Logo */}
+   <div className="border-b border-zinc-800 px-8 py-4 flex items-center justify-between bg-black">
 
-     <div className="text-3xl font-bold text-white">
+  {/* Logo */}
+  <h1 className="text-4xl font-extrabold tracking-tight text-white">
 
-       <h1 className='text-3xl font-bold text-white'>
-        TripSyncAi
-      </h1>
+    TripSync
+    <span className="text-cyan-400">
+      AI
+    </span>
 
-      <h2 className='text-lg font-semibold text-white'>
-        {userData?.firstName} {userData?.lastName}
-      </h2>
+  </h1>
 
-      {/* <p className='text-sm text-gray-400'>
-        {userData?.email}
-      </p> */}
+  {/* User */}
+  <div className="text-right">
 
-     </div>
+    <h2 className="text-lg font-semibold text-white">
+      {userData?.firstName} {userData?.lastName}
+    </h2>
 
-    </div>
+  </div>
+
+</div>
   )
 }
 

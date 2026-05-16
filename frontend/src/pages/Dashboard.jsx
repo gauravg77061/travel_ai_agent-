@@ -1,14 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import axios from "axios"
+import axios from "axios";
 
-import { useEffect,useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import {useNavigate} from "react-router-dom"
+import { useDispatch } from "react-redux";
 
-import {useDispatch} from "react-redux"
-
-import {setUser} from "../redux/slices/authSlice"
+import { setUser } from "../redux/slices/authSlice";
 
 import BASE_URL from "../services/axios";
 
@@ -16,57 +14,83 @@ import Navbar from "../components/Navbar";
 
 import MainArea from "../components/MainArea";
 
-const Dashboard = ()=>{
+import SideBar from "../components/Sidebar";
 
-    const[userData,setUserData]=useState(null)
+const Dashboard = () => {
 
-    const dispatch=useDispatch();
+  const [userData, setUserData] = useState(null);
 
-    const navigate=useNavigate();
+  const dispatch = useDispatch();
 
-    const fetchProfile= async () =>{
+  const navigate = useNavigate();
 
-       try {
+  const fetchProfile = async () => {
 
-         const response=await axios.get(
-            BASE_URL+'profile/view',{withCredentials:true,}
-        )
+    try {
 
-        //  console.log(response.data.data)
+      const response = await axios.get(
+        BASE_URL + "profile/view",
+        {
+          withCredentials: true,
+        }
+      );
 
-        setUserData(response.data.data);
+      setUserData(response.data.data);
 
+      dispatch(setUser(response.data.data));
 
-        dispatch(setUser(response.data.data));
-        
-       } catch (error) {
-        
-        console.log(error)
-        navigate("/")
+    } catch (error) {
 
-       }
+      console.log(error);
+
+      navigate("/");
 
     }
 
-    useEffect(() =>{
-        fetchProfile();
-    },[])
+  };
 
-    if(!userData){
-           <div className="min-h-screen bg-black text-white flex items-center justify-center text-2xl">
+  useEffect(() => {
+
+    fetchProfile();
+
+  }, []);
+
+  if (!userData) {
+
+    return (
+
+      <div className="min-h-screen bg-black text-white flex items-center justify-center text-2xl">
 
         Loading...
 
       </div>
-    }
 
-    return(
-        <div className="min-h-screen bg- black">
+    );
 
-            <Navbar userData={userData}/>
-            <MainArea userData={userData}/>
+  }
 
-        </div>
-    )
-}
+  return (
+
+    <div className="min-h-screen bg-black">
+
+      {/* Navbar */}
+      <Navbar userData={userData} />
+
+      {/* Dashboard Body */}
+      <div className="flex">
+
+        {/* Sidebar */}
+        <SideBar />
+
+        {/* Main Area */}
+        <MainArea userData={userData} />
+
+      </div>
+
+    </div>
+
+  );
+
+};
+
 export default Dashboard;
