@@ -62,7 +62,9 @@ messageRouter.get('/:groupId',userAuth,async(req,res) =>{
             throw new Error("you are not a members of this group")
         }
 
-        const messages=await Message.find({groupId}).sort({createdAt:1})
+       const messages = await Message.find({ groupId })
+  .populate("senderId", "firstName lastName")
+  .sort({ createdAt: 1 });
 
         return res.status(200).json({
             message:"Message fetched successfully",

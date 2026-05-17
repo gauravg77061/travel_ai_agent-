@@ -24,19 +24,27 @@ const registerMessageSocket=(io,socket) =>{
                 text,
             })
 
+                    const populatedUserMessage = await Message.findById(
+                result.userMessage._id
+            ).populate("senderId", "firstName lastName");
+
             io.to(groupId).emit(
                 "receive_message",
-                result.userMessage
-            )
-
+                populatedUserMessage
+)
             //Emit ai message if exists 
 
-            if(result.aiMessage){
-                io.to(groupId).emit(
-                    "receive_message",
-                    result.aiMessage
-                )
-            }
+           if (result.aiMessage) {
+
+    const populatedAiMessage = await Message.findById(
+        result.aiMessage._id
+    ).populate("senderId", "firstName lastName");
+
+    io.to(groupId).emit(
+        "receive_message",
+        populatedAiMessage
+    );
+}
             
 
         } catch (error) {
